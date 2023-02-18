@@ -18,41 +18,6 @@ window.addEventListener('load', () => {
     container.addChild(playerSprite)
 
 
-
-    // const dirtContainer = new PIXI.Container()
-    // container.addChild(dirtContainer)
-    // for (let i = 0; i < 4; i++) {
-    //     let sprite = PIXI.Sprite.from(`assets/images/dirt_${i + 1}.png`)
-    //     sprite.anchor.set(0.5)
-    //     sprite.scale.set(.5)
-    //     do {
-    //         sprite.x = Math.random() * 2000 - 1000
-    //         sprite.y = Math.random() * 800 - 150
-    //     } while (sprite.y < 250 && sprite.x < 300 && sprite.x > -300)
-    //     dirtContainer.addChild(sprite)
-    // }
-
-
-    // const rootAngles = []
-    // const rootSprites = []
-    // const rootContainer = new PIXI.Container()
-    // rootContainer.scale.set(0.08)
-    // rootContainer.y = -70
-    // container.addChild(rootContainer)
-
-    // let parent = rootContainer
-    // for (let i = 0; i < controlPieceCount; i++) {
-    //     let sprite = PIXI.Sprite.from('assets/images/white square.png')
-    //     sprite.anchor.set(0.5)
-    //     sprite.scale.set(1 - 1/controlPieceCount)
-    //     sprite.y = 64
-    //     parent.addChild(sprite)
-    //     rootSprites.push(sprite)
-    //     rootAngles.push(Math.random())
-    //     parent = sprite
-    // }
-
-
     app.ticker.add(delta => {
         let speed = 7
 
