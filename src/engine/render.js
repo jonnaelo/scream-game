@@ -1,3 +1,5 @@
+import { mapClamp } from './utils.js'
+
 export let app, container
 
 window.addEventListener('load', () => {
@@ -40,20 +42,25 @@ window.addEventListener('load', () => {
 })
 
 export const cameraFollow = sprite => {
+    const view = container.getGlobalPosition()
+    const target = sprite.getGlobalPosition()
+    const canvasScaling = container.parent.scale
+
+    const newCentering = {
+        x: (view.x - target.x) / canvasScaling.x,
+        y: (view.y - target.y) / canvasScaling.y
+    }
+
+    const diff = {
+        x: newCentering.x - container.x,
+        y: newCentering.y - container.y
+    }
+
+    const r = a => Math.sqrt(a.x*a.x + a.y*a.y)
+
     // Exponential smoothing
-    const t = 0.05
-
-    // Horizontally
-    const viewX = container.getGlobalPosition().x
-    const tipX = sprite.getGlobalPosition().x
-    const canvasScalingX = container.parent.scale.x
-    const newCenteringX = (viewX - tipX) / canvasScalingX
-    container.x = (1-t) * container.x + t * newCenteringX
-
-    // Vertically
-    const viewY = container.getGlobalPosition().y
-    const tipY = sprite.getGlobalPosition().y
-    const canvasScalingY = container.parent.scale.y
-    const newCenteringY = (viewY - tipY) / canvasScalingY
-    container.y = (1-t) * container.y + t * newCenteringY
+    const t = mapClamp(1/(Math.sqrt(r(diff))*1.2+1), 1, 0.1, 0.5, 0.07)
+    // const t = 0.07
+    container.x += diff.x * t
+    container.y += diff.y * t
 }
