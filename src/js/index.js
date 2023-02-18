@@ -1,7 +1,7 @@
-import { app, container } from './render.js'
-import { controller } from './controller.js'
-import { collider } from './containsPoint.js'
-import { mapv } from './utils.js'
+import { app, container } from '../engine/render.js'
+import { controller } from '../engine/controller.js'
+import { collider } from '../engine/containsPoint.js'
+import { mapv } from '../engine/utils.js'
 
 let playerX = 0
 let playerY = 0
