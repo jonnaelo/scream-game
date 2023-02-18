@@ -1,1 +1,1 @@
-# scream-game
+# Scream Game
