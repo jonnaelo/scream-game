@@ -38,3 +38,22 @@ window.addEventListener('load', () => {
     container = new PIXI.Container()
     wrappingContainer.addChild(container)
 })
+
+export const cameraFollow = sprite => {
+    // Exponential smoothing
+    const t = 0.05
+
+    // Horizontally
+    const viewX = container.getGlobalPosition().x
+    const tipX = sprite.getGlobalPosition().x
+    const canvasScalingX = container.parent.scale.x
+    const newCenteringX = (viewX - tipX) / canvasScalingX
+    container.x = (1-t) * container.x + t * newCenteringX
+
+    // Vertically
+    const viewY = container.getGlobalPosition().y
+    const tipY = sprite.getGlobalPosition().y
+    const canvasScalingY = container.parent.scale.y
+    const newCenteringY = (viewY - tipY) / canvasScalingY
+    container.y = (1-t) * container.y + t * newCenteringY
+}

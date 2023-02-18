@@ -1,4 +1,4 @@
-import { app, container } from '../engine/render.js'
+import { app, container, cameraFollow } from '../engine/render.js'
 import { controller } from '../engine/controller.js'
 import { collider } from '../engine/containsPoint.js'
 import { mapv } from '../engine/utils.js'
@@ -66,21 +66,7 @@ window.addEventListener('load', () => {
         playerSprite.x = playerX
         playerSprite.y = playerY
 
-        // Center the view
-        const t = 0.05
 
-        // Horizontally
-        const viewX = container.getGlobalPosition().x
-        const tipX = playerSprite.getGlobalPosition().x
-        const canvasScalingX = container.parent.scale.x
-        const newCenteringX = (viewX - tipX) / canvasScalingX
-        container.x = (1-t) * container.x + t * newCenteringX
-
-        // Vertically
-        const viewY = container.getGlobalPosition().y
-        const tipY = playerSprite.getGlobalPosition().y
-        const canvasScalingY = container.parent.scale.y
-        const newCenteringY = (viewY - tipY) / canvasScalingY
-        container.y = (1-t) * container.y + t * newCenteringY
+        cameraFollow(playerSprite)
     })
 })
