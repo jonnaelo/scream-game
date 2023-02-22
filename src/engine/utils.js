@@ -24,3 +24,5 @@ export const mapClamp = (x, in_min, in_max, out_min, out_max) => {
     // x = out_min .. out_max
     return x
 }
+
+export const r = (x, y) => Math.sqrt(x*x + y*y)
