@@ -33,7 +33,7 @@ window.addEventListener('load', () => {
 
             // Create 10 sound particles per frame
             for (let i = 0; i < 20; i++) {
-                const speed = 7 + Math.random() * 3 // 7..10
+                const speed = 10
                 const radius = 15 + Math.random() * 10 // 15..20
 
                 let x, y
@@ -56,7 +56,6 @@ window.addEventListener('load', () => {
                 particle.vy = y * speed
                 particle.x = playerSprite.x + x * radius
                 particle.y = playerSprite.y + y * radius
-                particle.age = 0
 
                 soundParticles.push(particle)
                 container.addChild(particle)
@@ -69,9 +68,8 @@ window.addEventListener('load', () => {
 
         for(let i = soundParticles.length - 1; i >= 0; i--){
             const particle = soundParticles[i]
-            particle.age += delta
 
-            if (particle.age > 100) {
+            if (Math.random() < 0.01) {
                 particle.destroy()
                 soundParticles.splice(i, 1)
                 continue
