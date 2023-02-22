@@ -65,15 +65,16 @@ window.addEventListener('load', () => {
                 triggerState = 0
                 startGame()
             }
+            return
         }
 
         let speed = 7
 
-        if (!gameOver && triggerState === 0 && !controller.trigger) {
+        if (triggerState === 0 && !controller.trigger) {
             triggerState = 1
         }
 
-        if (!gameOver && triggerState === 1 && controller.trigger) {
+        if (triggerState === 1 && controller.trigger) {
             speed *= 0.3
             player.texture = playerScreaming
 
