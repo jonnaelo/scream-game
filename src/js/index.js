@@ -31,7 +31,7 @@ window.addEventListener('load', () => {
         enemy.scale.set(0.7)
         enemy.x = Math.random() * 1000
         enemy.y = Math.random() * 1000
-        enemy.health = 100
+        enemy.health = 500
 
         enemies.push(enemy)
         container.addChild(enemy)
@@ -44,7 +44,7 @@ window.addEventListener('load', () => {
         let speed = 7
 
         if (controller.trigger) {
-            speed *= 0.5
+            speed *= 0.3
             player.texture = playerScreaming
 
             const count = 20 + 50 * Math.sin(Date.now() / 15)
@@ -106,7 +106,7 @@ window.addEventListener('load', () => {
 
         // Enemies move towards the player
         for (const enemy of enemies) {
-            const speed = 1
+            const speed = 1.7
             let dx = player.x - enemy.x
             let dy = player.y - enemy.y
             const dr = Math.sqrt(dx*dx + dy*dy)
@@ -129,6 +129,33 @@ window.addEventListener('load', () => {
                 dy *= force / dr/dr
                 enemy1.x += dx
                 enemy1.y += dy
+            }
+        }
+
+        // Enemies take damage from sound
+        for (const enemy of enemies) {
+            for (let i = soundParticles.length - 1; i >= 0; i--){
+                const particle = soundParticles[i]
+
+                const dx = particle.x - enemy.x
+                const dy = particle.y - enemy.y
+                if (Math.abs(dx) + Math.abs(dy) < 100) {
+                    if (Math.sqrt(dx*dx + dy*dy) < 5 + 70*enemy.scale.x) {
+                        enemy.health -= 1
+                        enemy.scale.set(mapv(enemy.health, 0, 500, 0.2, 0.7))
+                        particle.destroy()
+                        soundParticles.splice(i, 1)
+                    }
+                }
+            }
+        }
+
+        // Enemies can die
+        for (let i = enemies.length - 1; i >= 0; i--){
+            const enemy = enemies[i]
+            if (enemy.health <= 0) {
+                enemy.destroy()
+                enemies.splice(i, 1)
             }
         }
 
