@@ -65,16 +65,15 @@ window.addEventListener('load', () => {
                 triggerState = 0
                 startGame()
             }
-            return
         }
 
         let speed = 7
 
-        if (triggerState === 0 && !controller.trigger) {
+        if (!gameOver && triggerState === 0 && !controller.trigger) {
             triggerState = 1
         }
 
-        if (triggerState === 1 && controller.trigger) {
+        if (!gameOver && triggerState === 1 && controller.trigger) {
             speed *= 0.3
             player.texture = playerScreaming
 
@@ -196,11 +195,13 @@ window.addEventListener('load', () => {
         }
 
         // Enemies give damage to player
-        for (const enemy of enemies) {
-            if (r(enemy.x - player.x, enemy.y - player.y) < 70*enemy.scale.x + 100*player.scale.x) {
-                gameOver = true
-                triggerState = 0
-                player.scale.set(0)
+        if (!gameOver) {
+            for (const enemy of enemies) {
+                if (r(enemy.x - player.x, enemy.y - player.y) < 70*enemy.scale.x + 100*player.scale.x) {
+                    gameOver = true
+                    triggerState = 0
+                    player.scale.set(0)
+                }
             }
         }
 
