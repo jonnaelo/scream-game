@@ -41,7 +41,7 @@ window.addEventListener('load', () => {
     app.ticker.add(delta => {
         let speed = 7
 
-        if (controller.trigger) {
+        if (controller.trigger && !gameOver) {
             speed *= 0.3
             player.texture = playerScreaming
 
@@ -145,7 +145,7 @@ window.addEventListener('load', () => {
                 if (Math.abs(dx) + Math.abs(dy) < 100) {
                     if (Math.sqrt(dx*dx + dy*dy) < 5 + 70*enemy.scale.x) {
                         enemy.health -= 1
-                        enemy.scale.set(mapv(enemy.health, 0, 500, 0.2, 0.7))
+                        enemy.scale.set(mapv(enemy.health, 0, 500, 0.3, 0.7))
 
                         particle.destroy()
                         soundParticles.splice(i, 1)
