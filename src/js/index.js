@@ -12,9 +12,12 @@ window.addEventListener('load', () => {
     bgSprite.scale.set(10)
     container.addChild(bgSprite)
 
-    let playerSprite = PIXI.Sprite.from('assets/images/sound-particle-01.svg')
+    let playerNormal = PIXI.Texture.from('assets/images/normal-face.svg')
+    let playerScreaming = PIXI.Texture.from('assets/images/scream-face.svg')
+
+    let playerSprite = new PIXI.Sprite(playerNormal)
     playerSprite.anchor.set(0.5)
-    playerSprite.scale.set(0.2)
+    playerSprite.scale.set(0.3)
     container.addChild(playerSprite)
 
 
@@ -23,6 +26,9 @@ window.addEventListener('load', () => {
 
         if (controller.trigger) {
             speed *= 0.5
+            playerSprite.texture = playerScreaming
+        } else {
+            playerSprite.texture = playerNormal
         }
 
         playerX += controller.move.x * delta * speed
