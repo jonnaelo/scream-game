@@ -20,28 +20,60 @@ window.addEventListener('load', () => {
 
     container.addChild(player)
 
-    // Create enemies
-    const enemies = new Array()
-    for (let i = 0; i < 10; i++) {
-
-        const enemy = new PIXI.Sprite(eyeTexture)
-        enemy.anchor.set(0.5)
-        enemy.scale.set(0.7)
-        enemy.x = Math.random() * 1000
-        enemy.y = Math.random() * 1000
-        enemy.health = 500
-
-        enemies.push(enemy)
-        container.addChild(enemy)
-    }
+    let enemies = new Array()
 
     const soundParticleTexture = PIXI.Texture.from('assets/images/sound-particle-01.svg')
-    const soundParticles = new Array()
+    let soundParticles = new Array()
 
+    const startGame = () => {
+        for (const enemy of enemies) {
+            enemy.destroy()
+        }
+        for (const particle of soundParticles) {
+            particle.destroy()
+        }
+
+        // Create enemies
+        enemies = new Array()
+        for (let i = 0; i < 10; i++) {
+
+            const enemy = new PIXI.Sprite(eyeTexture)
+            enemy.anchor.set(0.5)
+            enemy.scale.set(0.7)
+            enemy.x = Math.random() * 1000
+            enemy.y = Math.random() * 1000
+            enemy.health = 500
+
+            enemies.push(enemy)
+            container.addChild(enemy)
+        }
+
+        soundParticles = new Array()
+
+        gameOver = false
+        player.scale.set(0.3)
+    }
+    startGame()
+
+    let triggerState = 0
     app.ticker.add(delta => {
+        if (gameOver) {
+            if (triggerState === 0 && !controller.trigger) {
+                triggerState = 1
+            }
+            if (triggerState === 1 && controller.trigger) {
+                triggerState = 0
+                startGame()
+            }
+        }
+
         let speed = 7
 
-        if (controller.trigger && !gameOver) {
+        if (!gameOver && triggerState === 0 && !controller.trigger) {
+            triggerState = 1
+        }
+
+        if (!gameOver && triggerState === 1 && controller.trigger) {
             speed *= 0.3
             player.texture = playerScreaming
 
@@ -166,6 +198,7 @@ window.addEventListener('load', () => {
         for (const enemy of enemies) {
             if (r(enemy.x - player.x, enemy.y - player.y) < 70*enemy.scale.x + 100*player.scale.x) {
                 gameOver = true
+                triggerState = 0
                 player.scale.set(0)
             }
         }
