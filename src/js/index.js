@@ -50,6 +50,7 @@ window.addEventListener('load', () => {
                 y /= r
 
                 const particle = new PIXI.Sprite(soundParticleTexture)
+                particle.anchor.set(0.5)
                 particle.scale.set(0.07)
 
                 particle.vx = x * speed
