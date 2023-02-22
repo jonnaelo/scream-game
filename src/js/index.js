@@ -14,12 +14,28 @@ window.addEventListener('load', () => {
 
     const playerNormal = PIXI.Texture.from('assets/images/normal-face.svg')
     const playerScreaming = PIXI.Texture.from('assets/images/scream-face.svg')
+    const eyeTexture = PIXI.Texture.from('assets/images/eye.svg')
 
     let playerSprite = new PIXI.Sprite(playerNormal)
     playerSprite.anchor.set(0.5)
     playerSprite.scale.set(0.3)
 
     container.addChild(playerSprite)
+
+    // Create enemies
+    const enemies = new Array()
+    for (let i = 0; i < 10; i++) {
+
+        const enemy = new PIXI.Sprite(eyeTexture)
+        enemy.anchor.set(0.5)
+        enemy.scale.set(0.7)
+        enemy.x = Math.random() * 1000
+        enemy.y = Math.random() * 1000
+        enemy.health = 100
+
+        enemies.push(enemy)
+        container.addChild(enemy)
+    }
 
     const soundParticleTexture = PIXI.Texture.from('assets/images/sound-particle-01.svg')
     const soundParticles = new Array()
@@ -75,7 +91,6 @@ window.addEventListener('load', () => {
         }
 
         // Sound particle simulation
-
         for(let i = soundParticles.length - 1; i >= 0; i--){
             const particle = soundParticles[i]
 
