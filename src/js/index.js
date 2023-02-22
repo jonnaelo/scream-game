@@ -6,9 +6,8 @@ import { mapv, r } from '../engine/utils.js'
 let gameOver = false
 
 window.addEventListener('load', () => {
-    let bgSprite = PIXI.Sprite.from('assets/images/sound-particle-01.svg')
+    let bgSprite = PIXI.Sprite.from('assets/images/tausta-01.svg')
     bgSprite.anchor.set(0.5)
-    bgSprite.scale.set(10)
     container.addChild(bgSprite)
 
     const playerNormal = PIXI.Texture.from('assets/images/normal-face.svg')
