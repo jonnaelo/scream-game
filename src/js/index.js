@@ -47,22 +47,25 @@ window.addEventListener('load', () => {
             speed *= 0.3
             player.texture = playerScreaming
 
+            // Create sound particles
             const count = 20 + 50 * Math.sin(Date.now() / 15)
             console.log(count)
-            // Create 10 sound particles per frame
             for (let i = 0; i < count; i++) {
                 const speed = 10
-                const radius = 15 + Math.random() * 10 // 15..20
+                const radius = 15 + Math.random() * 10 // 15..25
 
+                // Random point inside a unit circle
                 let x, y
                 while (true) {
                     x = Math.random() * 2 - 1
                     y = Math.random() * 2 - 1
                     if (Math.sqrt(x*x + y*y) <= 1) break
                 }
+
                 // bias sound towards movement
                 x += controller.move.x * 0.5
                 y += controller.move.y * 0.5
+
                 const r = Math.sqrt(x*x + y*y)
                 x /= r
                 y /= r
@@ -143,6 +146,7 @@ window.addEventListener('load', () => {
                     if (Math.sqrt(dx*dx + dy*dy) < 5 + 70*enemy.scale.x) {
                         enemy.health -= 1
                         enemy.scale.set(mapv(enemy.health, 0, 500, 0.2, 0.7))
+
                         particle.destroy()
                         soundParticles.splice(i, 1)
                     }
@@ -162,7 +166,6 @@ window.addEventListener('load', () => {
         // Player movement
         player.x += controller.move.x * delta * speed
         player.y += controller.move.y * delta * speed
-
 
         cameraFollow(player)
     })
