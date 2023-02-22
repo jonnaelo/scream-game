@@ -31,8 +31,10 @@ window.addEventListener('load', () => {
             speed *= 0.5
             playerSprite.texture = playerScreaming
 
+            const count = 20 + 50 * Math.sin(Date.now() / 15)
+            console.log(count)
             // Create 10 sound particles per frame
-            for (let i = 0; i < 20; i++) {
+            for (let i = 0; i < count; i++) {
                 const speed = 10
                 const radius = 15 + Math.random() * 10 // 15..20
 
