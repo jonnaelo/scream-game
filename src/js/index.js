@@ -29,8 +29,15 @@ window.addEventListener('load', () => {
         const enemy = new PIXI.Sprite(eyeTexture)
         enemy.anchor.set(0.5)
         enemy.scale.set(0.7)
-        enemy.x = player.x + (Math.random() * 2 - 1) * 1000
-        enemy.y = player.y + (Math.random() * 2 - 1) * 1000
+
+        let x, y
+        while (true) {
+            x = (Math.random() * 2 - 1) * 1000
+            y = (Math.random() * 2 - 1) * 1000
+            if (r(x, y) > 300 && r(x, y) < 600) break
+        }
+        enemy.x = player.x + x
+        enemy.y = player.y + y
         enemy.health = health
         enemy.maxHealth = health
 
@@ -49,7 +56,7 @@ window.addEventListener('load', () => {
 
         // Create enemies
         enemies = new Array()
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 3; i++) {
             spawnEnemy(200)
         }
 
@@ -220,7 +227,7 @@ window.addEventListener('load', () => {
 
         // Spawn new enemies
         if (Math.random() < 0.01) {
-            const health = 200 + gameElapsedTime*0.5
+            const health = 200 + gameElapsedTime*0.3
             console.log('spawn', health)
             spawnEnemy(health)
         }
