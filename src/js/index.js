@@ -31,9 +31,11 @@ window.addEventListener('load', () => {
             speed *= 0.5
             playerSprite.texture = playerScreaming
 
+            const count = 20 + 50 * Math.sin(Date.now() / 15)
+            console.log(count)
             // Create 10 sound particles per frame
-            for (let i = 0; i < 20; i++) {
-                const speed = 7 + Math.random() * 3 // 7..10
+            for (let i = 0; i < count; i++) {
+                const speed = 10
                 const radius = 15 + Math.random() * 10 // 15..20
 
                 let x, y
@@ -57,7 +59,6 @@ window.addEventListener('load', () => {
                 particle.vy = y * speed
                 particle.x = playerSprite.x + x * radius
                 particle.y = playerSprite.y + y * radius
-                particle.age = 0
 
                 soundParticles.push(particle)
                 container.addChild(particle)
@@ -66,13 +67,19 @@ window.addEventListener('load', () => {
             playerSprite.texture = playerNormal
         }
 
+        // Flip player character horizontally when moving left
+        if (controller.move.x < 0) {
+            playerSprite.scale.x = -0.3
+        } else {
+            playerSprite.scale.x = 0.3
+        }
+
         // Sound particle simulation
 
         for(let i = soundParticles.length - 1; i >= 0; i--){
             const particle = soundParticles[i]
-            particle.age += delta
 
-            if (particle.age > 100) {
+            if (Math.random() < 0.01) {
                 particle.destroy()
                 soundParticles.splice(i, 1)
                 continue
