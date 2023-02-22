@@ -231,6 +231,11 @@ window.addEventListener('load', () => {
             player.y += controller.move.y * delta * speed
         }
 
+        const xRepeat = 251.7
+        const yRepeat = 622.5
+        bgSprite.x = Math.round(player.x/xRepeat)*xRepeat
+        bgSprite.y = Math.round(player.y/yRepeat)*yRepeat
+
         cameraFollow(player)
     })
 })
