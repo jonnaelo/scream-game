@@ -104,7 +104,7 @@ window.addEventListener('load', () => {
             particle.y += particle.vy * delta
         }
 
-        // Enemy movement
+        // Enemies move towards the player
         for (const enemy of enemies) {
             const speed = 1
             let dx = player.x - enemy.x
@@ -114,6 +114,22 @@ window.addEventListener('load', () => {
             dy *= speed / dr
             enemy.x += dx
             enemy.y += dy
+        }
+
+        // Enemies stay away from each other
+        for (const enemy1 of enemies) {
+            for (const enemy2 of enemies) {
+                if (enemy1 === enemy2) continue
+
+                const force = 30
+                let dx = enemy1.x - enemy2.x
+                let dy = enemy1.y - enemy2.y
+                const dr = Math.sqrt(dx*dx + dy*dy)
+                dx *= force / dr/dr
+                dy *= force / dr/dr
+                enemy1.x += dx
+                enemy1.y += dy
+            }
         }
 
         // Player movement
