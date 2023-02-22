@@ -1,10 +1,9 @@
 import { app, container, cameraFollow } from '../engine/render.js'
 import { controller } from '../engine/controller.js'
 import { collider } from '../engine/containsPoint.js'
-import { mapv } from '../engine/utils.js'
+import { mapv, r } from '../engine/utils.js'
 
-let playerX = 0
-let playerY = 0
+let gameOver = false
 
 window.addEventListener('load', () => {
     let bgSprite = PIXI.Sprite.from('assets/images/sound-particle-01.svg')
@@ -59,16 +58,16 @@ window.addEventListener('load', () => {
                 while (true) {
                     x = Math.random() * 2 - 1
                     y = Math.random() * 2 - 1
-                    if (Math.sqrt(x*x + y*y) <= 1) break
+                    if (r(x, y) <= 1) break
                 }
 
                 // bias sound towards movement
                 x += controller.move.x * 0.5
                 y += controller.move.y * 0.5
 
-                const r = Math.sqrt(x*x + y*y)
-                x /= r
-                y /= r
+                const r_ = r(x, y)
+                x /= r_
+                y /= r_
 
                 const particle = new PIXI.Sprite(soundParticleTexture)
                 particle.anchor.set(0.5)
@@ -88,9 +87,9 @@ window.addEventListener('load', () => {
 
         // Flip player character horizontally when moving left
         if (controller.move.x < 0) {
-            player.scale.x = -0.3
+            player.scale.x = -player.scale.y
         } else {
-            player.scale.x = 0.3
+            player.scale.x = player.scale.y
         }
 
         // Sound particle simulation
@@ -108,15 +107,17 @@ window.addEventListener('load', () => {
         }
 
         // Enemies move towards the player
-        for (const enemy of enemies) {
-            const speed = 1.7
-            let dx = player.x - enemy.x
-            let dy = player.y - enemy.y
-            const dr = Math.sqrt(dx*dx + dy*dy)
-            dx *= speed / dr
-            dy *= speed / dr
-            enemy.x += dx
-            enemy.y += dy
+        if (!gameOver) {
+            for (const enemy of enemies) {
+                const speed = 1.7
+                let dx = player.x - enemy.x
+                let dy = player.y - enemy.y
+                const dr = r(dx, dy)
+                dx *= speed / dr
+                dy *= speed / dr
+                enemy.x += dx
+                enemy.y += dy
+            }
         }
 
         // Enemies stay away from each other
@@ -127,7 +128,7 @@ window.addEventListener('load', () => {
                 const force = 30
                 let dx = enemy1.x - enemy2.x
                 let dy = enemy1.y - enemy2.y
-                const dr = Math.sqrt(dx*dx + dy*dy)
+                const dr = r(dx, dy)
                 dx *= force / dr/dr
                 dy *= force / dr/dr
                 enemy1.x += dx
@@ -163,9 +164,19 @@ window.addEventListener('load', () => {
             }
         }
 
+        // Enemies give damage to player
+        for (const enemy of enemies) {
+            if (r(enemy.x - player.x, enemy.y - player.y) < 70*enemy.scale.x + 100*player.scale.x) {
+                gameOver = true
+                player.scale.set(0)
+            }
+        }
+
         // Player movement
-        player.x += controller.move.x * delta * speed
-        player.y += controller.move.y * delta * speed
+        if (!gameOver) {
+            player.x += controller.move.x * delta * speed
+            player.y += controller.move.y * delta * speed
+        }
 
         cameraFollow(player)
     })
