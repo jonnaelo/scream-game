@@ -66,6 +66,13 @@ window.addEventListener('load', () => {
             playerSprite.texture = playerNormal
         }
 
+        // Flip player character horizontally when moving left
+        if (controller.move.x < 0) {
+            playerSprite.scale.x = -0.3
+        } else {
+            playerSprite.scale.x = 0.3
+        }
+
         // Sound particle simulation
 
         for(let i = soundParticles.length - 1; i >= 0; i--){
