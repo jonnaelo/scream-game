@@ -25,6 +25,20 @@ window.addEventListener('load', () => {
     const soundParticleTexture = PIXI.Texture.from('assets/images/sound-particle-01.svg')
     let soundParticles = new Array()
 
+    const spawnEnemy = (health) => {
+        const enemy = new PIXI.Sprite(eyeTexture)
+        enemy.anchor.set(0.5)
+        enemy.scale.set(0.7)
+        enemy.x = player.x + (Math.random() * 2 - 1) * 1000
+        enemy.y = player.y + (Math.random() * 2 - 1) * 1000
+        enemy.health = health
+        enemy.maxHealth = health
+
+        enemies.push(enemy)
+        container.addChild(enemy)
+    }
+
+    let gameElapsedTime
     const startGame = () => {
         for (const enemy of enemies) {
             enemy.destroy()
@@ -36,27 +50,22 @@ window.addEventListener('load', () => {
         // Create enemies
         enemies = new Array()
         for (let i = 0; i < 10; i++) {
-
-            const enemy = new PIXI.Sprite(eyeTexture)
-            enemy.anchor.set(0.5)
-            enemy.scale.set(0.7)
-            enemy.x = Math.random() * 1000
-            enemy.y = Math.random() * 1000
-            enemy.health = 500
-
-            enemies.push(enemy)
-            container.addChild(enemy)
+            spawnEnemy(200)
         }
 
         soundParticles = new Array()
 
         gameOver = false
         player.scale.set(0.3)
+
+        gameElapsedTime = 0
     }
     startGame()
 
     let triggerState = 0
     app.ticker.add(delta => {
+        gameElapsedTime += delta
+
         if (gameOver) {
             if (triggerState === 0 && !controller.trigger) {
                 triggerState = 1
@@ -176,13 +185,17 @@ window.addEventListener('load', () => {
                 if (Math.abs(dx) + Math.abs(dy) < 100) {
                     if (Math.sqrt(dx*dx + dy*dy) < 5 + 70*enemy.scale.x) {
                         enemy.health -= 1
-                        enemy.scale.set(mapv(enemy.health, 0, 500, 0.3, 0.7))
 
                         particle.destroy()
                         soundParticles.splice(i, 1)
                     }
                 }
             }
+        }
+
+        // Enemy scaling
+        for (const enemy of enemies) {
+            enemy.scale.set(mapv(enemy.health, 0, 200, 0.3, 0.7))
         }
 
         // Enemies can die
@@ -203,6 +216,13 @@ window.addEventListener('load', () => {
                     player.scale.set(0)
                 }
             }
+        }
+
+        // Spawn new enemies
+        if (Math.random() < 0.01) {
+            const health = 200 + gameElapsedTime*0.5
+            console.log('spawn', health)
+            spawnEnemy(health)
         }
 
         // Player movement
