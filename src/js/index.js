@@ -16,11 +16,11 @@ window.addEventListener('load', () => {
     const playerScreaming = PIXI.Texture.from('assets/images/scream-face.svg')
     const eyeTexture = PIXI.Texture.from('assets/images/eye.svg')
 
-    let playerSprite = new PIXI.Sprite(playerNormal)
-    playerSprite.anchor.set(0.5)
-    playerSprite.scale.set(0.3)
+    let player = new PIXI.Sprite(playerNormal)
+    player.anchor.set(0.5)
+    player.scale.set(0.3)
 
-    container.addChild(playerSprite)
+    container.addChild(player)
 
     // Create enemies
     const enemies = new Array()
@@ -45,7 +45,7 @@ window.addEventListener('load', () => {
 
         if (controller.trigger) {
             speed *= 0.5
-            playerSprite.texture = playerScreaming
+            player.texture = playerScreaming
 
             const count = 20 + 50 * Math.sin(Date.now() / 15)
             console.log(count)
@@ -73,25 +73,25 @@ window.addEventListener('load', () => {
 
                 particle.vx = x * speed
                 particle.vy = y * speed
-                particle.x = playerSprite.x + x * radius
-                particle.y = playerSprite.y + y * radius
+                particle.x = player.x + x * radius
+                particle.y = player.y + y * radius
 
                 soundParticles.push(particle)
                 container.addChild(particle)
             }
         } else {
-            playerSprite.texture = playerNormal
+            player.texture = playerNormal
         }
 
         // Flip player character horizontally when moving left
         if (controller.move.x < 0) {
-            playerSprite.scale.x = -0.3
+            player.scale.x = -0.3
         } else {
-            playerSprite.scale.x = 0.3
+            player.scale.x = 0.3
         }
 
         // Sound particle simulation
-        for(let i = soundParticles.length - 1; i >= 0; i--){
+        for (let i = soundParticles.length - 1; i >= 0; i--){
             const particle = soundParticles[i]
 
             if (Math.random() < 0.01) {
@@ -104,14 +104,23 @@ window.addEventListener('load', () => {
             particle.y += particle.vy * delta
         }
 
+        // Enemy movement
+        for (const enemy of enemies) {
+            const speed = 1
+            let dx = player.x - enemy.x
+            let dy = player.y - enemy.y
+            const dr = Math.sqrt(dx*dx + dy*dy)
+            dx *= speed / dr
+            dy *= speed / dr
+            enemy.x += dx
+            enemy.y += dy
+        }
+
         // Player movement
-        playerX += controller.move.x * delta * speed
-        playerY += controller.move.y * delta * speed
-
-        playerSprite.x = playerX
-        playerSprite.y = playerY
+        player.x += controller.move.x * delta * speed
+        player.y += controller.move.y * delta * speed
 
 
-        cameraFollow(playerSprite)
+        cameraFollow(player)
     })
 })
