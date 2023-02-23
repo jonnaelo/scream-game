@@ -49,6 +49,8 @@ window.addEventListener('load', () => {
         enemy.y = player.y + y
         enemy.health = health
         enemy.maxHealth = health
+        enemy.spawnTime = Date.now()
+        enemy.alpha = 0
 
         enemies.push(enemy)
         container.addChild(enemy)
@@ -180,6 +182,14 @@ window.addEventListener('load', () => {
                 dy *= speed / dr
                 enemy.x += dx
                 enemy.y += dy
+            }
+        }
+
+        // Enemies get more opaque over time
+        for (const enemy of enemies) {
+            if(enemy.alpha < 1.0) {
+                const t = (Date.now() - enemy.spawnTime) / 500
+                enemy.alpha = Math.min(1, t)
             }
         }
 
