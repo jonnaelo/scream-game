@@ -6,6 +6,10 @@ import { mapv, r } from '../engine/utils.js'
 let gameOver = false
 
 window.addEventListener('load', () => {
+
+    let showTitle = true
+    let gameOver = true
+
     let bgSprite = PIXI.Sprite.from('assets/images/tausta-01.svg')
     bgSprite.anchor.set(0.5)
     container.addChild(bgSprite)
@@ -22,13 +26,18 @@ window.addEventListener('load', () => {
 
     let enemies = new Array()
 
+    const title = PIXI.Sprite.from('assets/images/title-01.svg')
+    title.anchor.set(0.5)
+    title.y = -10
+    container.addChild(title)
+
     const soundParticleTexture = PIXI.Texture.from('assets/images/sound-particle-01.svg')
     let soundParticles = new Array()
 
     const spawnEnemy = (health) => {
         const enemy = new PIXI.Sprite(eyeTexture)
+        enemy.scale.set(mapv(health, 0, 200, 0.3, 0.7) / 4)
         enemy.anchor.set(0.5)
-        enemy.scale.set(0.7)
 
         let x, y
         while (true) {
@@ -47,6 +56,8 @@ window.addEventListener('load', () => {
 
     let gameElapsedTime
     const startGame = () => {
+        showTitle = false
+
         for (const enemy of enemies) {
             enemy.destroy()
         }
@@ -67,7 +78,6 @@ window.addEventListener('load', () => {
 
         gameElapsedTime = 0
     }
-    startGame()
 
     let triggerState = 0
     app.ticker.add(delta => {
@@ -81,6 +91,13 @@ window.addEventListener('load', () => {
                 triggerState = 0
                 startGame()
             }
+        }
+
+        if (showTitle) {
+            title.scale.set(0.25)
+            return
+        } else {
+            title.scale.set(0)
         }
 
         let speed = 7
@@ -189,8 +206,8 @@ window.addEventListener('load', () => {
 
                 const dx = particle.x - enemy.x
                 const dy = particle.y - enemy.y
-                if (Math.abs(dx) + Math.abs(dy) < 100) {
-                    if (Math.sqrt(dx*dx + dy*dy) < 5 + 70*enemy.scale.x) {
+                if (Math.abs(dx) + Math.abs(dy) < 200) {
+                    if (Math.sqrt(dx*dx + dy*dy) < 6 + 420*enemy.scale.x) {
                         enemy.health -= 1
 
                         particle.destroy()
@@ -202,7 +219,7 @@ window.addEventListener('load', () => {
 
         // Enemy scaling
         for (const enemy of enemies) {
-            enemy.scale.set(mapv(enemy.health, 0, 200, 0.3, 0.7))
+            enemy.scale.set(mapv(enemy.health, 0, 200, 0.3, 0.7) / 4)
         }
 
         // Enemies can die
@@ -217,7 +234,7 @@ window.addEventListener('load', () => {
         // Enemies give damage to player
         if (!gameOver) {
             for (const enemy of enemies) {
-                if (r(enemy.x - player.x, enemy.y - player.y) < 70*enemy.scale.x + 100*player.scale.x) {
+                if (r(enemy.x - player.x, enemy.y - player.y) < 420*enemy.scale.x + 100*player.scale.x) {
                     gameOver = true
                     triggerState = 0
                     player.scale.set(0)
