@@ -12,7 +12,6 @@ window.addEventListener('load', () => {
 
     let bgSprite = PIXI.Sprite.from('assets/images/tausta-01.svg')
     bgSprite.anchor.set(0.5)
-    bgSprite.scale.set(0)
     container.addChild(bgSprite)
 
     const playerNormal = PIXI.Texture.from('assets/images/normal-face.svg')
@@ -29,6 +28,7 @@ window.addEventListener('load', () => {
 
     const title = PIXI.Sprite.from('assets/images/title-01.svg')
     title.anchor.set(0.5)
+    title.y = -10
     container.addChild(title)
 
     const soundParticleTexture = PIXI.Texture.from('assets/images/sound-particle-01.svg')
@@ -36,8 +36,8 @@ window.addEventListener('load', () => {
 
     const spawnEnemy = (health) => {
         const enemy = new PIXI.Sprite(eyeTexture)
+        enemy.scale.set(mapv(health, 0, 200, 0.3, 0.7) / 4)
         enemy.anchor.set(0.5)
-        enemy.scale.set(0.7)
 
         let x, y
         while (true) {
@@ -94,7 +94,7 @@ window.addEventListener('load', () => {
         }
 
         if (showTitle) {
-            title.scale.set(1)
+            title.scale.set(0.25)
             return
         } else {
             title.scale.set(0)
@@ -206,8 +206,8 @@ window.addEventListener('load', () => {
 
                 const dx = particle.x - enemy.x
                 const dy = particle.y - enemy.y
-                if (Math.abs(dx) + Math.abs(dy) < 100) {
-                    if (Math.sqrt(dx*dx + dy*dy) < 5 + 70*enemy.scale.x) {
+                if (Math.abs(dx) + Math.abs(dy) < 200) {
+                    if (Math.sqrt(dx*dx + dy*dy) < 6 + 420*enemy.scale.x) {
                         enemy.health -= 1
 
                         particle.destroy()
@@ -219,7 +219,7 @@ window.addEventListener('load', () => {
 
         // Enemy scaling
         for (const enemy of enemies) {
-            enemy.scale.set(mapv(enemy.health, 0, 200, 0.3, 0.7))
+            enemy.scale.set(mapv(enemy.health, 0, 200, 0.3, 0.7) / 4)
         }
 
         // Enemies can die
@@ -234,7 +234,7 @@ window.addEventListener('load', () => {
         // Enemies give damage to player
         if (!gameOver) {
             for (const enemy of enemies) {
-                if (r(enemy.x - player.x, enemy.y - player.y) < 70*enemy.scale.x + 100*player.scale.x) {
+                if (r(enemy.x - player.x, enemy.y - player.y) < 420*enemy.scale.x + 100*player.scale.x) {
                     gameOver = true
                     triggerState = 0
                     player.scale.set(0)
