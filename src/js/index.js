@@ -10,9 +10,12 @@ window.addEventListener('load', () => {
     let showTitle = true
     let gameOver = true
 
+    const gameContainer = new PIXI.Container()
+    container.addChild(gameContainer)
+
     let bgSprite = PIXI.Sprite.from('assets/images/tausta-01.svg')
     bgSprite.anchor.set(0.5)
-    container.addChild(bgSprite)
+    gameContainer.addChild(bgSprite)
 
     const playerNormal = PIXI.Texture.from('assets/images/normal-face.svg')
     const playerScreaming = PIXI.Texture.from('assets/images/scream-face.svg')
@@ -22,9 +25,13 @@ window.addEventListener('load', () => {
     player.anchor.set(0.5)
     player.scale.set(0.3)
 
-    container.addChild(player)
+    gameContainer.addChild(player)
 
     let enemies = new Array()
+
+    let endScreen = PIXI.Sprite.from('assets/images/go-back-to-sleep-02.svg')
+    endScreen.anchor.set(0.5)
+    container.addChild(endScreen)
 
     const title = PIXI.Sprite.from('assets/images/title-01.svg')
     title.anchor.set(0.5)
@@ -51,7 +58,7 @@ window.addEventListener('load', () => {
         enemy.maxHealth = health
 
         enemies.push(enemy)
-        container.addChild(enemy)
+        gameContainer.addChild(enemy)
     }
 
     let gameElapsedTime
@@ -93,8 +100,16 @@ window.addEventListener('load', () => {
             }
         }
 
+        endScreen.x = player.x
+        endScreen.y = player.y
+        if (gameOver) {
+            endScreen.scale.set(0.5)
+        } else {
+            endScreen.scale.set(0)
+        }
+
         if (showTitle) {
-            title.scale.set(0.25)
+            title.scale.set(0.5)
             return
         } else {
             title.scale.set(0)
@@ -134,7 +149,7 @@ window.addEventListener('load', () => {
 
                 const particle = new PIXI.Sprite(soundParticleTexture)
                 particle.anchor.set(0.5)
-                particle.scale.set(0.1)
+                particle.scale.set(0.9)
 
                 particle.vx = x * speed
                 particle.vy = y * speed
@@ -142,7 +157,7 @@ window.addEventListener('load', () => {
                 particle.y = player.y + y * radius
 
                 soundParticles.push(particle)
-                container.addChild(particle)
+                gameContainer.addChild(particle)
             }
         } else {
             player.texture = playerNormal
