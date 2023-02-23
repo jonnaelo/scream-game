@@ -94,7 +94,7 @@ window.addEventListener('load', () => {
         }
 
         if (showTitle) {
-            title.scale.set(0.25)
+            title.scale.set(0.5)
             return
         } else {
             title.scale.set(0)
@@ -134,7 +134,7 @@ window.addEventListener('load', () => {
 
                 const particle = new PIXI.Sprite(soundParticleTexture)
                 particle.anchor.set(0.5)
-                particle.scale.set(0.1)
+                particle.scale.set(0.9)
 
                 particle.vx = x * speed
                 particle.vy = y * speed
